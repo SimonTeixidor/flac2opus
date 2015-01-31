@@ -17,10 +17,11 @@ function encode
 		TITLE=`metaflac "$FLAC_DIR"/"$1" --show-tag=TITLE | sed s/.*=//g`
 		ALBUM=`metaflac "$FLAC_DIR"/"$1" --show-tag=ALBUM | sed s/.*=//g`
 		TRACKNUMBER=`metaflac "$FLAC_DIR"/"$1" --show-tag=TRACKNUMBER | sed s/.*=//g`
+		DISCNUMBER=`metaflac "$FLAC_DIR"/"$1" --show-tag=DISCNUMBER | sed s/.*=//g`
 		
 		echo "encoding $1"
 		flac -s -c -d "$FLAC_DIR"/"$1"| opusenc --quiet --artist "$ARTIST" --bitrate "$BITRATE"\
-			--title "$TITLE" --comment "TRACKNUMBER=$TRACKNUMBER" --album "$ALBUM" \
+			--title "$TITLE" --comment "TRACKNUMBER=$TRACKNUMBER" --comment "DISCNUMBER=$DISCNUMBER" --album "$ALBUM" \
 			- "$LOSSY_DIR"/"$(echo "$1" | sed 's/.flac/.opus/')"
 	fi
 }
