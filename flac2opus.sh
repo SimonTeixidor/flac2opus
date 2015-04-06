@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export BITRATE=128
+export BITRATE=96
 
 function usage
 {
