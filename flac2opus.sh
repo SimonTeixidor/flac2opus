@@ -33,27 +33,27 @@ if [ "$#" -ne 2 ]; then
 	exit
 fi
 
-export FLAC_DIR=$1
-export LOSSY_DIR=$2
+export FLAC_DIR="$1"
+export LOSSY_DIR="$2"
 
 #If first argument isn't a directory, quit.
-if [ ! -d $FLAC_DIR ]; then
+if [ ! -d "$FLAC_DIR" ]; then
 	usage
 	exit
 fi
 
 #if LOSSY_DIR doesn't exist, create it
-if [ ! -d $LOSSY_DIR ]; then
-	mkdir $LOSSY_DIR
+if [ ! -d "$LOSSY_DIR" ]; then
+	mkdir "$LOSSY_DIR"
 fi
 
 #recreate the folder structure in lossy
 echo "Creating the folder structure."
-find $FLAC_DIR -mindepth 1 -name \*.flac -printf '%P\n'|while read fname; do
+find "$FLAC_DIR" -mindepth 1 -name \*.flac -printf '%P\n'|while read fname; do
 	if [ ! -d "$LOSSY_DIR/$(dirname "$fname")" ]; then
 		mkdir -p "$LOSSY_DIR/$(dirname "$fname")"
 	fi
 done
 
 echo "Encoding missing songs."
-find $FLAC_DIR -mindepth 1 -name \*.flac -printf '%P\n' | parallel --no-notice encode
+find "$FLAC_DIR" -mindepth 1 -name \*.flac -printf '%P\n' | parallel --no-notice encode
