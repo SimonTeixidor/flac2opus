@@ -22,7 +22,7 @@ function encode
 		echo "encoding $1"
 		flac -s -c -d "$FLAC_DIR"/"$1"| opusenc --quiet --artist "$ARTIST" --bitrate "$BITRATE"\
 			--title "$TITLE" --comment "TRACKNUMBER=$TRACKNUMBER" --comment "DISCNUMBER=$DISCNUMBER" --album "$ALBUM" \
-			- "$LOSSY_DIR"/"$(echo "$1" | sed 's/.flac/.opus/')"
+			- "$LOSSY_DIR"/"$(echo "$1" | sed 's/\.flac$/\.opus/')"
 	fi
 }
 export -f encode
