@@ -1,7 +1,7 @@
-# flac2opus
+# flac2opus - Converts directory tree of flac files to [opus](https://www.opus-codec.org/)
 This script rebuilds an entire flac music library with the opus codec.
-The folder hierarchy is kept identical to the the original one.
-Encoding is multithreaded for fast performance.
+The folder hierarchy of the output is identical with the input.
+Encoding is multithreaded for good performance.
 
 ## Usage
 ```
