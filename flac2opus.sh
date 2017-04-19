@@ -11,8 +11,7 @@ function usage
 
 function encode
 {
-	#only encode if the encode is older than the original file.
-	if [ "$FLAC_DIR"/"$1" -nt "$LOSSY_DIR"/"$(echo "$1" | sed 's/.flac/.opus/')" ]; then
+	if [ ! -f "$LOSSY_DIR"/"$(echo "$1" | sed 's/.flac/.opus/')" ]; then
 		ARTIST=`metaflac "$FLAC_DIR"/"$1" --show-tag=ARTIST | sed s/.*=//`
 		TITLE=`metaflac "$FLAC_DIR"/"$1" --show-tag=TITLE | sed s/.*=//g`
 		ALBUM=`metaflac "$FLAC_DIR"/"$1" --show-tag=ALBUM | sed s/.*=//g`
@@ -49,10 +48,10 @@ fi
 
 #recreate the folder structure in lossy
 echo "Creating the folder structure."
-find "$FLAC_DIR" -mindepth 1 -name \*.flac -printf '%P\n'|while read fname; do
-	if [ ! -d "$LOSSY_DIR/$(dirname "$fname")" ]; then
-		mkdir -p "$LOSSY_DIR/$(dirname "$fname")"
-	fi
+diff --new-line-format="" --unchanged-line-format="" \
+  <(find $FLAC_DIR -mindepth 2 -maxdepth 2 -type d -printf '%P\n' | sort) \
+  <(find $LOSSY_DIR -mindepth 2 -maxdepth 2 -type d -printf '%P\n' | sort) |while read fname; do
+	mkdir -p "$LOSSY_DIR/$fname"
 done
 
 echo "Encoding missing songs."
