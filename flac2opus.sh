@@ -55,4 +55,7 @@ diff --new-line-format="" --unchanged-line-format="" \
 done
 
 echo "Encoding missing songs."
-find "$FLAC_DIR" -mindepth 1 -name \*.flac -printf '%P\n' | parallel --no-notice encode
+diff --new-line-format="" --unchanged-line-format="" \
+  <(find $FLAC_DIR -mindepth 1 -name \*.flac -printf '%P\n' | sort) \
+  <(find $LOSSY_DIR -mindepth 1 -name \*.opus -printf '%P\n' | sed 's/\.opus$/\.flac/g' | sort) \
+  | parallel --no-notice encode
