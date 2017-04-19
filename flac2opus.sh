@@ -59,3 +59,11 @@ diff --new-line-format="" --unchanged-line-format="" \
   <(find $FLAC_DIR -mindepth 1 -name \*.flac -printf '%P\n' | sort) \
   <(find $LOSSY_DIR -mindepth 1 -name \*.opus -printf '%P\n' | sed 's/\.opus$/\.flac/g' | sort) \
   | parallel --no-notice encode
+
+echo "Copying cover.jpg"
+diff --new-line-format="" --unchanged-line-format="" \
+  <(find $FLAC_DIR -mindepth 1 -name cover.jpg -printf '%P\n' | sort) \
+  <(find $LOSSY_DIR -mindepth 1 -name cover.jpg -printf '%P\n' | sort) \
+  | while read f; do
+	cp "$FLAC_DIR/$f" "$LOSSY_DIR/$f"
+done
