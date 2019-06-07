@@ -12,16 +12,8 @@ function usage
 function encode
 {
 	if [ ! -f "$LOSSY_DIR"/"$(echo "$1" | sed 's/.flac/.opus/')" ]; then
-		ARTIST=`metaflac "$FLAC_DIR"/"$1" --show-tag=ARTIST | sed s/.*=//`
-		TITLE=`metaflac "$FLAC_DIR"/"$1" --show-tag=TITLE | sed s/.*=//g`
-		ALBUM=`metaflac "$FLAC_DIR"/"$1" --show-tag=ALBUM | sed s/.*=//g`
-		TRACKNUMBER=`metaflac "$FLAC_DIR"/"$1" --show-tag=TRACKNUMBER | sed s/.*=//g`
-		DISCNUMBER=`metaflac "$FLAC_DIR"/"$1" --show-tag=DISCNUMBER | sed s/.*=//g`
-		
 		echo "encoding $1"
-		flac -s -c -d "$FLAC_DIR"/"$1"| opusenc --quiet --artist "$ARTIST" --bitrate "$BITRATE"\
-			--title "$TITLE" --comment "TRACKNUMBER=$TRACKNUMBER" --comment "DISCNUMBER=$DISCNUMBER" --album "$ALBUM" \
-			- "$LOSSY_DIR"/"$(echo "$1" | sed 's/\.flac$/\.opus/')"
+		opusenc --quiet "$FLAC_DIR/$1" "$LOSSY_DIR"/"$(echo "$1" | sed 's/\.flac$/\.opus/')"
 	fi
 }
 export -f encode
