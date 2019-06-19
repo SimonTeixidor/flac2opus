@@ -54,8 +54,8 @@ diff --new-line-format="" --unchanged-line-format="" \
 
 echo "Copying cover.jpg and folder.jpg"
 diff --new-line-format="" --unchanged-line-format="" \
-  <(find $FLAC_DIR -mindepth 1 -name cover.jpg -o -name folder.jpg -printf '%P\n' | sort) \
-  <(find $LOSSY_DIR -mindepth 1 -name cover.jpg -o -name folder.jpg -printf '%P\n' | sort) \
+  <(find $FLAC_DIR -mindepth 1 -name cover.jpg -printf '%P\n' -o -name folder.jpg -printf '%P\n' | sort) \
+  <(find $LOSSY_DIR -mindepth 1 -name cover.jpg -printf '%P\n' -o -name folder.jpg -printf '%P\n' | sort) \
   | while read f; do
 	cp "$FLAC_DIR/$f" "$LOSSY_DIR/$f"
 done
