@@ -1,14 +1,21 @@
-# flac2opus - Converts directory tree of flac files to [opus](https://www.opus-codec.org/)
-This script rebuilds an entire flac music library with the opus codec.
-The folder hierarchy of the output is identical with the input.
-Encoding is multithreaded for good performance.
-
-The script copies album art that is named either "cover.jpg" or "folder.jpg".
+# flac2opus.sh
+flac2opus.sh recursively encodes a directory of flac format files to opus,
+recreating the same directory structure in the output directory. It makes use
+of all CPU cores (or as many as you would like). The tool does partial updates,
+so that only new or modified files are (re-)encoded. Encodes are removed if the
+original no longer exists. Album art is copied to the encoded directory if its
+name matches {cover,folder}.{jpg,png}.
 
 ## Usage
 ```
-./flac2opus.sh path/to/flac path/to/lossy
+Usage:
+    ./flac2opus.sh [options] <FLAC_DIR> <LOSSY_DIR>
+
+Options:
+    -h          Print this help page
+    -b <kbit/s> Set which bitrate to encode to
+    -j <jobs>   Run up to <jobs> encoder processes in parallel.
 ```
 
 ## Dependencies
-Flac, opus-tools, bash, GNU find, GNU parallel.
+Flac, opus-tools, bash.
