@@ -14,16 +14,18 @@ usage="Usage:
     $0 [options] <FLAC_DIR> <LOSSY_DIR>
 
 Options:
-    -h          Print this help page
-    -b <kbit/s> Set which bitrate to encode to
+    -h          Print this help page.
+    -b <kbit/s> Set which bitrate to encode to.
+    -f          Rename cover images to folder.{png,jpg} (these are recognized as album art on Android)
     -j <jobs>   Run up to <jobs> encoder processes in parallel."
 
 COVER_REGEX='.*/\(cover\|folder\)\.\(jpg\|png\|gif\)$'
 OPTIND=1
 JOBS=$(nproc --all 2>/dev/null || echo 1)
+export FOLDER_RENAME=0
 export BITRATE=96
 
-while getopts "hb:j:s:" opt; do
+while getopts "hb:j:fs:" opt; do
 	case "$opt" in
 	h)
 		printf "%s\n\n%s\n" "$credits" "$usage"
@@ -34,6 +36,9 @@ while getopts "hb:j:s:" opt; do
 		;;
 	j)
 		JOBS="$OPTARG"
+		;;
+	f)
+		FOLDER_RENAME=1
 		;;
 	*) ;;
 
@@ -74,6 +79,18 @@ encode() {
 }
 export -f encode
 
+# Rename cover.{jpg,png} to folder.{jpg,png} if requested
+folder_rename() {
+	IN="$FLAC_DIR/$1"
+	OUT="$LOSSY_DIR/$1"
+	if [ "$FOLDER_RENAME" = "1" ]; then
+		OUT="${OUT%cover.jpg}folder.jpg"
+		OUT="${OUT%cover.png}folder.png"
+	fi
+	printf "%s\0%s\0" "$IN" "$OUT"
+}
+export -f folder_rename
+
 # Create target folders.
 find "$FLAC_DIR" -type d -printf "$LOSSY_DIR/%P\0" | XARGS mkdir -p
 
@@ -81,7 +98,8 @@ find "$FLAC_DIR" -type d -printf "$LOSSY_DIR/%P\0" | XARGS mkdir -p
 find "$FLAC_DIR" -type f -iname '*.flac' -printf "%P\0" | XARGS -I{} -n 1 bash -c 'encode "$@"' _ {}
 
 # Copy covers
-find "$FLAC_DIR" -type f -iregex "$COVER_REGEX" -printf "$FLAC_DIR/%P\0$LOSSY_DIR/%P\0" |
+find "$FLAC_DIR" -type f -iregex "$COVER_REGEX" -printf "%P\0" |
+	XARGS -I{} -n 1 bash -c 'folder_rename "$@"' _ {} |
 	XARGS -n 2 cp --preserve -u
 
 # Remove encodes if the original has been removed

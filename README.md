@@ -14,6 +14,7 @@ Usage:
 Options:
     -h          Print this help page
     -b <kbit/s> Set which bitrate to encode to
+    -f          Rename cover images to folder.{png,jpg} (these are recognized as album art on Android)
     -j <jobs>   Run up to <jobs> encoder processes in parallel.
 ```
 
