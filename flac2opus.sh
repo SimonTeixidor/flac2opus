@@ -84,8 +84,8 @@ folder_rename() {
 	IN="$FLAC_DIR/$1"
 	OUT="$LOSSY_DIR/$1"
 	if [ "$FOLDER_RENAME" = "1" ]; then
-		OUT="${OUT%cover.jpg}folder.jpg"
-		OUT="${OUT%cover.png}folder.png"
+		[ "cover.jpg" = "$(basename "$OUT")" ] && OUT="${OUT%cover.jpg}folder.jpg"
+		[ "cover.png" = "$(basename "$OUT")" ] && OUT="${OUT%cover.png}folder.png"
 	fi
 	printf "%s\0%s\0" "$IN" "$OUT"
 }
